@@ -218,6 +218,9 @@ main {
     justify-content: space-between;
     padding: 30px 64px;
     border: solid 1px #e9eaea;
+    border-bottom: 1px;
+    border-left: 1px;
+    border-right: 1px;
 }
 
 .finf {
