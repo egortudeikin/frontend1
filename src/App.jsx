@@ -1,27 +1,32 @@
-import { useEffect, useState } from "react"
-import { Button } from "./components/button"
-import axios from "axios"
-import { api } from "./services"
-import { Card } from "./components/post-card/post-card"
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { HomePage } from "./pages/home-page"
 import { PostPage } from "./pages/post-page"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { LoginPage } from "./pages/login-page"
+import { RegisterPage } from "./pages/register-page"
+
+export const queryClient = new QueryClient({
+	defaultOptions: {
+		queries: {
+			select: res => res.data,
+			retry: 3
+		}
+	}
+})
 
 function App() {
-
   return (
-    <BrowserRouter>
-    {/* <div className="wrapper">
-      {data.map(el => (
-        <Card post={el}/>
-      ))}
-    </div> */}
-    <Routes>
-      <Route path="/" element={<HomePage/>}/>
-      <Route path="/post/:postId" element={<PostPage/>}/>
-    </Routes>
-    </BrowserRouter>
-  )
+		<QueryClientProvider client={queryClient}>
+			<BrowserRouter>
+				<Routes>
+					<Route path="/" element={<HomePage/>}/>
+					<Route path="/post/:postId" element={<PostPage/>}/>
+					<Route path="/sign-in" element={<LoginPage/>}/>
+					<Route path="/sign-up" element={<RegisterPage/>}/>
+				</Routes>
+			</BrowserRouter>
+		</QueryClientProvider>
+	)
 }
 
 export default App
