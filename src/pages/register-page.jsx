@@ -3,6 +3,7 @@ import s from "./register-page.module.scss";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup'
 
+
 export const RegisterPage = () => {
 
   const validateScheme = Yup.object().shape({
