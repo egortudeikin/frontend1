@@ -25,8 +25,7 @@ export const LoginPage = () => {
         }}
         onSubmit={(values) => {
           alert(
-            `E-mail: ${values?.email}
-          Password: ${values?.password}`,
+            `E-mail: ${values?.email}\n          Password: ${values?.password}`,
           );
         }}
       >
@@ -37,6 +36,7 @@ export const LoginPage = () => {
               className={s.input}
               placeholder="E-mail"
               name="email"
+              autoComplete="username"
             />
             {errors?.email?.length > 0 ? errors?.email : ""}
             <Field
@@ -44,6 +44,7 @@ export const LoginPage = () => {
               className={s.input}
               placeholder="qwerty123"
               name="password"
+              autoComplete="current-password"
             />
             {errors?.password?.length > 0 ? errors?.password : ""}
             <button className={s.submit} type="submit" disabled={!isValid || (!touched?.email || !touched?.password)}>

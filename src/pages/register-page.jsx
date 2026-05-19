@@ -3,7 +3,6 @@ import s from "./register-page.module.scss";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup'
 
-
 export const RegisterPage = () => {
 
   const validateScheme = Yup.object().shape({
@@ -43,6 +42,7 @@ export const RegisterPage = () => {
               className={s.input}
               placeholder="Имя"
               name="firstName"
+              autoComplete="off"
             />
             {errors?.firstName?.length > 0 ? errors?.firstName : ""}
             <Field
@@ -50,13 +50,15 @@ export const RegisterPage = () => {
               className={s.input}
               placeholder="Фамилия"
               name="lastName"
+              autoComplete="off"
             />
             {errors?.lastName?.length > 0 ? errors?.lastName : ""}
             <Field
-              type="text"
+              type="email"
               className={s.input}
               placeholder="E-mail"
               name="email"
+              autoComplete="username"
             />
             {errors?.email?.length > 0 ? errors?.email : ""}
             <Field
@@ -64,6 +66,7 @@ export const RegisterPage = () => {
               className={s.input}
               placeholder="qwerty123"
               name="password"
+              autoComplete="new-password"
             />
             {errors?.password?.length > 0 ? errors?.password : ""}
             <button className={s.submit} type="submit" disabled={!isValid || (!touched?.firstName || !touched?.email || !touched?.password)}>
