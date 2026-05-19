@@ -1,24 +1,32 @@
-import React, { useState } from "react";
-import s from "./register-page.module.scss";
-import { Field, Form, Formik } from "formik";
-import * as Yup from 'yup'
+import React, { useState } from 'react'
+import s from './register-page.module.scss'
+import { Field, Form, Formik } from 'formik'
+import * as Yup from "yup"
+import { useAuthContext } from '../shared/context/AuthContext'
+import { useNavigate } from 'react-router-dom'
 
 export const RegisterPage = () => {
 
+  const { register } = useAuthContext()
+  const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState(null)
+
   const validateScheme = Yup.object().shape({
     firstName: Yup.string()
-      .matches(/^[а-яА-ЯёЁ]{2,}$/, "Только русские символы, минимум 2")
-      .required("Все поля должны быть заполнены"),
+      .matches(/^[а-яА-ЯёЁ\s]*$/, "Только русские символы")
+      .min(2, "Минимум 2 символа")
+      .required("Имя обязательно"),
     lastName: Yup.string()
-      .matches(/^[а-яА-ЯёЁ]{2,}$/, "Только русские символы, минимум 2")
-      .notRequired(),
+      .matches(/^[а-яА-ЯёЁ\s]*$/, "Только русские символы")
+      .min(2, "Минимум 2 символа",)
+      .nullable(),
     email: Yup.string()
-      .email("Это не E-mail, перепиши пж, на E-mail")
-      .required("Все поля должны быть заполнены"),
+      .email("Это не E-mail")
+      .required("Поля должны быть заполнены"),
     password: Yup.string()
       .min(8, "Минимум 8 символов")
-      .max(20, "Максимум 20 символов")
-      .required("Все поля должны быть заполнены"),
+      .max(30, "Максимум 30 символов")
+      .required("Поля должны быть заполнены"),
   });
 
   return (
@@ -29,52 +37,55 @@ export const RegisterPage = () => {
           firstName: "",
           lastName: "",
           email: "",
-          password: "",
+          password: null,
         }}
-        onSubmit={(values) => {
-          alert(`\nИмя: ${values?.firstName}\nФамилия: ${values?.lastName}\nE-mail: ${values?.email}\nПароль: ${values?.password}\n`);
+        onSubmit={({email, password, firstName, lastName}) => {
+          register({email, password, firstName, lastName})
         }}
       >
-        {({ errors, isValid, touched }) => (
+        {({ errors, isValid, touched, isSubmitting }) => (
           <Form className={s.form}>
             <Field
               type="text"
               className={s.input}
               placeholder="Имя"
               name="firstName"
-              autoComplete="off"
             />
-            {errors?.firstName?.length > 0 ? errors?.firstName : ""}
+            {touched?.firstName && errors?.firstName?.length ? errors?.firstName : ""}
             <Field
               type="text"
               className={s.input}
               placeholder="Фамилия"
               name="lastName"
-              autoComplete="off"
             />
-            {errors?.lastName?.length > 0 ? errors?.lastName : ""}
+            {touched?.lastName && errors?.lastName?.length > 0 ? errors?.lastName : ""}
             <Field
-              type="email"
+              type="text"
               className={s.input}
               placeholder="E-mail"
               name="email"
-              autoComplete="username"
             />
-            {errors?.email?.length > 0 ? errors?.email : ""}
+            {touched?.email && errors?.email?.length > 0 ? errors?.email : ""}
             <Field
               type="password"
               className={s.input}
               placeholder="qwerty123"
               name="password"
-              autoComplete="new-password"
             />
-            {errors?.password?.length > 0 ? errors?.password : ""}
-            <button className={s.submit} type="submit" disabled={!isValid || (!touched?.firstName || !touched?.email || !touched?.password)}>
-              ЗАРЕГИСТРИРОВАТЬСЯ
+            {touched?.password && errors?.password?.length > 0 ? errors?.password : ""}
+
+            {errorMessage ? <div style={{ color: 'crimson', marginTop: 8 }}>{errorMessage}</div> : null}
+
+            <button
+              className={s.submit}
+              type="submit"
+              disabled={!isValid || !touched?.email || !touched?.password || !touched?.firstName || isSubmitting}
+            >
+              ВОЙТИ
             </button>
           </Form>
         )}
       </Formik>
     </div>
   );
-};
+}

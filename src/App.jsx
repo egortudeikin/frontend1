@@ -4,29 +4,24 @@ import { PostPage } from "./pages/post-page"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { LoginPage } from "./pages/login-page"
 import { RegisterPage } from "./pages/register-page"
-
-export const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			select: res => res.data,
-			retry: 3
-		}
-	}
-})
+import { queryClient } from "./shared/clients/queryClient"
+import { AuthProvider } from "./shared/context/AuthContext"
 
 function App() {
   return (
-		<QueryClientProvider client={queryClient}>
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<HomePage/>}/>
-					<Route path="/post/:postId" element={<PostPage/>}/>
-					<Route path="/sign-in" element={<LoginPage/>}/>
-					<Route path="/sign-up" element={<RegisterPage/>}/>
-				</Routes>
-			</BrowserRouter>
-		</QueryClientProvider>
-	)
+    <AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<HomePage/>}/>
+            <Route path="/post/:postId" element={<PostPage/>}/>
+            <Route path="/sign-in" element={<LoginPage/>}/>
+            <Route path="/sing-up" element={<RegisterPage/>}/>
+          </Routes>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </AuthProvider>
+  )
 }
 
 export default App

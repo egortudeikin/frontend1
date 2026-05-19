@@ -1,18 +1,22 @@
-import React, { useState } from "react";
-import s from "./login-page.module.scss";
-import { Field, Form, Formik } from "formik";
-import * as Yup from 'yup'
+import React, { useState } from 'react'
+import s from './login-page.module.scss'
+import { Field, Form, Formik } from 'formik'
+import * as Yup from "yup"
+import { supabaseClient } from '../shared/clients/supabaseClient'
+import { useAuthContext } from '../shared/context/AuthContext'
 
 export const LoginPage = () => {
 
+  const {login} = useAuthContext()
+
   const validateScheme = Yup.object().shape({
     email: Yup.string()
-      .email("Это не E-mail, перепиши пж, на E-mail")
-      .required("Все поля должны быть заполнены"),
+      .email("Это не E-mail")
+      .required("Поля должны быть заполнены"),
     password: Yup.string()
       .min(8, "Минимум 8 символов")
-      .max(20, "Максимум 20 символов")
-      .required("Все поля должны быть заполнены"),
+      .max(30, "Максимум 30 символов")
+      .required("Поля должны быть заполнены"),
   });
 
   return (
@@ -21,12 +25,10 @@ export const LoginPage = () => {
         validationSchema={validateScheme}
         initialValues={{
           email: "",
-          password: "",
+          password: null,
         }}
-        onSubmit={(values) => {
-          alert(
-            `E-mail: ${values?.email}\n          Password: ${values?.password}`,
-          );
+        onSubmit={({email, password}) => {
+          login({email, password})
         }}
       >
         {({ errors, isValid, touched }) => (
@@ -36,18 +38,21 @@ export const LoginPage = () => {
               className={s.input}
               placeholder="E-mail"
               name="email"
-              autoComplete="username"
             />
-            {errors?.email?.length > 0 ? errors?.email : ""}
+            {touched?.email && errors?.email?.length > 0 ? errors?.email : ""}
             <Field
               type="password"
               className={s.input}
               placeholder="qwerty123"
               name="password"
-              autoComplete="current-password"
             />
-            {errors?.password?.length > 0 ? errors?.password : ""}
-            <button className={s.submit} type="submit" disabled={!isValid || (!touched?.email || !touched?.password)}>
+            {touched?.password && errors?.password?.length > 0 ? errors?.password : ""}
+            {console.log(errors, isValid, touched)}
+            <button
+              className={s.submit}
+              type="submit"
+              disabled={!isValid || !touched?.email || !touched?.password}
+            >
               ВОЙТИ
             </button>
           </Form>
@@ -55,4 +60,4 @@ export const LoginPage = () => {
       </Formik>
     </div>
   );
-};
+}
