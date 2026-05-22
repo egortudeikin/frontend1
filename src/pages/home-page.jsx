@@ -46,7 +46,12 @@ export const HomePage = () => {
             </NavLink>
           </nav>
           {claims ? <>
+            <div className={s.actions}>
+              <NavLink className={s.ghostButton} to="./profile">
+					      Profile
+				      </NavLink>
             <button className={s.ghostButton} onClick={() => logout()}>Logout</button>
+            </div>
           </>:
             <div className={s.actions}>
               <NavLink className={s.ghostButton} to="./sign-in">
